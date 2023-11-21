@@ -1,0 +1,76 @@
+body {
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  font-size: medium;
+  font-family: emoji;
+  background-image: url('/src/pages/login/logos/background.jpg');
+  background-size: cover;
+  background-position: center; /* Optional: Center the background image */
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  
+}
+h2
+{
+  color: white;
+}
+ /* Divs */
+ .container-xl
+ {
+   border: 1px solid #070202; 
+   background-color: rgba(0, 0, 0, 0.5);
+   height: 100vh;
+         margin: auto;
+      text-align: center;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 18px -4px 38px #050000;
+
+ }
+ .col
+ {
+  align-items: center;
+ }
+
+  /* Inputs */
+  #loginInput
+  {
+    margin-bottom: 17px;
+    border-radius: 7px;
+    height: 31px;
+    border-color: coral;
+    width: 263px;
+    font-size: medium;
+    font-family: emoji;
+  }
+
+    /*Buttons */
+    #loginbtn
+    {
+      margin-bottom: 17px;
+      border-radius: 7px;
+      height: 29px;
+      width: 90px;
+      border-color: yellow;
+    }
+
+    #hidebtn
+    {
+      position: fixed;
+      right: 457px;
+      height: 31px;
+      border-radius: 10px;
+      margin-top: 3px;
+      border: transparent;
+      background-color: transparent;
+    }
+
+  
+h1
+{
+  text-align: center;
+}
