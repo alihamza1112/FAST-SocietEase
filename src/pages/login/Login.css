@@ -1,4 +1,4 @@
-body {
+.loginBody {
   display: flex;
   height: 100vh;
   margin: 0;
@@ -17,6 +17,7 @@ h2
   color: white;
 }
  /* Divs */
+ 
  .container-xl
  {
    border: 1px solid #070202; 
