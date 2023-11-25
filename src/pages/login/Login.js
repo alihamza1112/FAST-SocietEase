@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 export default function Header(props) {
@@ -65,6 +64,7 @@ export default function Header(props) {
   
   return (
     <>
+    
       <div className="container-xl">
         <div className="row align-items-start">
           <div className="col">
@@ -86,12 +86,4 @@ export default function Header(props) {
   );
 }
 
-Header.propTypes = {
-  title: PropTypes.string,
-  searchBar: PropTypes.bool,
-};
 
-Header.defaultProps = {
-  title: 'Default Title',
-  searchBar: false,
-};

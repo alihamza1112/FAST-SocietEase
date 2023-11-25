@@ -1,4 +1,8 @@
-body
+.container-xxl
 {
-background-color:white;
+    background-image: url('/src/pages/Main/background2\ .jpg');
+    background-size: cover;
+    background-position: center; /* Optional: Center the background image */
+        height: 100vh;
+    width: 1198px;
 }

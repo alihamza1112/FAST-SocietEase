@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 const port = process.env.PORT || 3001;
 
 const pool = new Pool({
@@ -50,7 +50,29 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/society', async (req, res) => {
+  const { title,text,imageBase64 } = req.body;
 
+  try {
+    await pool.query('INSERT INTO society(title, text,image) VALUES($1, $2, $3)', [
+      title,text,imageBase64,
+    ]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error inserting data into database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/getsociety', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT title, text, image FROM society');
+    const data = result.rows;
+    res.json({ data });
+  } catch (error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
