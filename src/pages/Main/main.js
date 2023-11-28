@@ -45,7 +45,12 @@ export default function Main() {
   return (
 <body className='mainBody'>
     <div className="App">
+<<<<<<< Updated upstream
     <Nav />
+=======
+    <input type="file" id="imageInput" onChange={handleImageChange} accept="image/*" />
+      <Button onClick={handleSubmit}>Submit</Button>
+>>>>>>> Stashed changes
       <Row lg={4} md={3} sm={2} xs={1}>
         {cardInfo.map(renderCard)}
       </Row>

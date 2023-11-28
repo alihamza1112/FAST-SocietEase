@@ -4,33 +4,6 @@ export default function Header(props) {
  
   const navigate = useNavigate();
 
-  /*const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const username = e.target.elements.username.value;
-    const password = e.target.elements.password.value;
-
-    try {
-      const response = await fetch('http://localhost:3001/addAdmin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        console.log('Admin added successfully!');
-      } else {
-        console.error('Failed to add admin.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };*/
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -68,7 +41,7 @@ export default function Header(props) {
       <div className="container-xl">
         <div className="row align-items-start">
           <div className="col">
-            <h2>Admin Login</h2><br/>
+            <h2 style={{ color: 'white' }}>Admin Login</h2><br/>
             <form onSubmit={handleSubmit}>
               
               <input id="loginInput" name="username" placeholder="Enter UserName " />
