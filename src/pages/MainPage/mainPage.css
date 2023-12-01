@@ -1,0 +1,15 @@
+.CI{
+   height: 70vh;
+}
+#yo
+{
+    background-color: rgb(231, 237, 241);
+   height: 30vh;
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 18px -4px 38px #050000;
+      margin: auto;
+      text-align: center;
+      width: 100%;
+}

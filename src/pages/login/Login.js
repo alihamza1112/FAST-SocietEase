@@ -51,7 +51,7 @@ export default function Header(props) {
       if (data.success) {
         
         alert('Login successful!'); 
-        navigate('/main');
+        navigate('/mainpage');
         
       } else {
        

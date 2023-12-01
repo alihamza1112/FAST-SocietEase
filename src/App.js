@@ -1,14 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login/Login';
-import Main from './pages/Main/main';
-
+import SocietyPage from './pages/Society/society';
+import MainPage from './pages/MainPage/mainPage';
 function App() {
     return (
         <BrowserRouter>
          <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/main" element={<Main />} />
+          <Route path="/societypage" element={<SocietyPage />} />
+          <Route path="/mainpage" element={<MainPage />} />
             </Routes>
             </BrowserRouter>
     );
