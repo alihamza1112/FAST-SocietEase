@@ -3,7 +3,7 @@
 }
 #yo
 {
-    background-color: rgb(231, 237, 241);
+    background-color: rgb(204, 187, 198);
    height: 30vh;
     display: flex;
       justify-content: center;
@@ -13,3 +13,13 @@
       text-align: center;
       width: 100%;
 }
+@media (max-width: 768px) {
+   .CI {
+     height: 50vh;
+   }
+   #yo {
+      height: 50vh;
+    }
+    
+ }
+

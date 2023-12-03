@@ -3,6 +3,8 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from './modal';
+import Button from 'react-bootstrap/Button';
+
 function NavScrollExample(props)  {
     const { buttonOnClick } = props;
   return (
@@ -35,6 +37,7 @@ function NavScrollExample(props)  {
             </Nav.Link>
           </Nav>
           {props.button && <button onClick={buttonOnClick}>{props.button}</button>}
+
           <Modal/>
         </Navbar.Collapse>
       </Container>

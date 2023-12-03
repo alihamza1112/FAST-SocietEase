@@ -10,8 +10,7 @@ function MainPage() {
   };
   return (
     <body>
-<div>
-    <Carousel data-bs-theme="light" className='CI1'>
+    <Carousel data-bs-theme="light" >
       <Carousel.Item className='CI'>
         <img
           className="d-block w-100"
@@ -49,7 +48,6 @@ function MainPage() {
       </Carousel.Item>
     </Carousel>
     {' '}
-    </div>
     <div class="container-xl" id='yo' ><Button variant="outline-success" onClick={movepagefunction}>Success</Button>
     </div>
 
