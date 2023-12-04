@@ -48,7 +48,7 @@ function MainPage() {
       </Carousel.Item>
     </Carousel>
     {' '}
-    <div class="container-xl" id='yo' ><Button variant="outline-success" onClick={movepagefunction}>Success</Button>
+    <div class="container-xl" id='yo' ><Button variant="outline-success" onClick={movepagefunction}>Admin Panal</Button>
     </div>
 
     </body>

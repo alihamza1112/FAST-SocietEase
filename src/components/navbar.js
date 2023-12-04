@@ -3,16 +3,18 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from './modal';
-import Button from 'react-bootstrap/Button';
 
 function NavScrollExample(props)  {
     const { buttonOnClick } = props;
+    const handleRefresh = () => {
+      window.location.reload();
+    };
   return (
     
     <Navbar  expand="lg" className="bg-body-tertiary">
       <Container fluid>
       
-        <Navbar.Brand href="#">FAST SocietEase</Navbar.Brand>
+        <Navbar.Brand href="#" onClick={handleRefresh}>FAST SocietEase</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
