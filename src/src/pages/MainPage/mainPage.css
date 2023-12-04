@@ -1,0 +1,25 @@
+.CI{
+   height: 70vh;
+}
+#yo
+{
+    background-color: rgb(204, 187, 198);
+   height: 30vh;
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 18px -4px 38px #050000;
+      margin: auto;
+      text-align: center;
+      width: 100%;
+}
+@media (max-width: 768px) {
+   .CI {
+     height: 50vh;
+   }
+   #yo {
+      height: 50vh;
+    }
+    
+ }
+

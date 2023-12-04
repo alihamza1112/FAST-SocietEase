@@ -1,0 +1,14 @@
+.mainBody {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-size: medium;
+    font-family: emoji;
+    background-color: rgb(227, 223, 175);
+    background-size: cover;
+    background-position: center; /* Optional: Center the background image */
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    
+  }
