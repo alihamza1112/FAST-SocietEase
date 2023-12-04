@@ -4,13 +4,14 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Nav from '../../components/navbar';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 export default function Main() {
   const [cardInfo, setCardInfo] = useState([]);
   const linkStyle = {
     textDecoration: 'none',
   };
+
   useEffect(() => {
     fetch('http://localhost:3001/getsociety')
       .then((response) => response.json())
@@ -30,15 +31,10 @@ export default function Main() {
   const renderCard = (card, index) => {
     return (
       <Col key={index} className="p-4 mb-4">
-        <Link
-          to={{
-            pathname: `/executivebody`,
-            title: card.title,
-            text: card.text,
-          }}
-          style={linkStyle}
-
-        >
+         <Link
+  to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(card.text)}`}
+  style={linkStyle}
+>
           <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
             <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
             <Card.Body>
