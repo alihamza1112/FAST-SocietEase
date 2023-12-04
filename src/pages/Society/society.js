@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Nav from '../../components/navbar';
-
+import { Link } from 'react-router-dom';
 
 export default function Main() {
   const [cardInfo, setCardInfo] = useState([]);
@@ -25,31 +25,36 @@ export default function Main() {
       });
   }, []); // Fetch data on initial render
 
- 
-
-  
   const renderCard = (card, index) => {
     return (
       <Col key={index} className="p-4 mb-4">
-        <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
-          <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
-          <Card.Body>
-            <Card.Title>{card.title}</Card.Title>
-            <Card.Text>{card.text}</Card.Text>
-          </Card.Body>
-        </Card>
+        <Link
+          to={{
+            pathname: `/executivebody`,
+            title: card.title,
+            text: card.text,
+          }}
+        >
+          <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
+            <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
+            <Card.Body>
+              <Card.Title>{card.title}</Card.Title>
+              <Card.Text>{card.text}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Link>
       </Col>
     );
   };
 
   return (
-<body className='mainBody'>
-    <div className="App">
-    <Nav />
-      <Row lg={4} md={3} sm={2} xs={1}>
-        {cardInfo.map(renderCard)}
-      </Row>
-    </div>
+    <body className="mainBody">
+      <div className="App">
+        <Nav />
+        <Row lg={4} md={3} sm={2} xs={1}>
+          {cardInfo.map(renderCard)}
+        </Row>
+      </div>
     </body>
   );
 }
