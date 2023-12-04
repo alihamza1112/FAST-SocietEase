@@ -8,7 +8,9 @@ import { Link } from 'react-router-dom';
 
 export default function Main() {
   const [cardInfo, setCardInfo] = useState([]);
-
+  const linkStyle = {
+    textDecoration: 'none',
+  };
   useEffect(() => {
     fetch('http://localhost:3001/getsociety')
       .then((response) => response.json())
@@ -34,6 +36,8 @@ export default function Main() {
             title: card.title,
             text: card.text,
           }}
+          style={linkStyle}
+
         >
           <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
             <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
