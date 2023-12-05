@@ -32,7 +32,7 @@ export default function Main() {
     return (
       <Col key={index} className="p-4 mb-4">
          <Link
-  to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(card.text)}`}
+  to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(card.text)}&image=${encodeURIComponent(card.image.src)}`}
   style={linkStyle}
 >
           <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
