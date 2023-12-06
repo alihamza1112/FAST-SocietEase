@@ -11,7 +11,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'fyp',
-  password: '132477',
+  password: 'Password',
   port: 5432,
 });
 
@@ -73,6 +73,30 @@ app.get('/getsociety', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.delete('/Delsociety', async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    // Use parameterized query to prevent SQL injection
+    const result = await pool.query(
+      'DELETE FROM society WHERE title = $1',
+      [title]
+    );
+
+    if (result.rowCount > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Society not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

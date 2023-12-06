@@ -12,3 +12,11 @@
     justify-content: left;
     
   }
+.CardLink
+{
+  text-decoration: none;
+}
+.CardBtn
+{
+  margin-right: 8px;
+}
