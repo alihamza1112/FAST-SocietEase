@@ -57,7 +57,7 @@ export default function ExecutiveBody() {
 
       {/* Two columns, eight rows with circle image and text */}
       <Row>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+        {[1, 2, 3, 4, 5, 6, 7].map((index) => (
           <Col key={index} xs={6} sm={3} className="mb-4 d-flex flex-column align-items-center">
             <Image src={`https://www.imagelighteditor.com/img/bg-after.jpg`} roundedCircle fluid style={{ height: '80px', width: '80px', objectFit: 'cover' }} />
             <div className="mt-2 text-center">

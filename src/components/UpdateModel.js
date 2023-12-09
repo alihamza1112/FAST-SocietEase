@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom';
 import './style.css';
 
 function Example(props) {
@@ -10,10 +9,9 @@ function Example(props) {
   const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
   const [mentorName, setMentorName] = useState(props.defaultMentorName || '');
   const [image, setImage] = useState(null);
-  const alreadysociety=societyName;
+  const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const navigate = useNavigate();
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);
@@ -42,7 +40,7 @@ function Example(props) {
 
     try {
       const response = await fetch('http://localhost:3001/updatesociety', {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,10 +58,6 @@ function Example(props) {
     } catch (error) {
       console.error('Error:', error);
     }
-  };
- const  LogOut=()=>{
-   
-    navigate('/loginPage');
   };
   return (
     <>

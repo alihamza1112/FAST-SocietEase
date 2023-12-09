@@ -91,7 +91,7 @@ export default function Main() {
     <body className="mainBody">
       <div className="App">
         <Nav />
-        <Row lg={4} md={3} sm={2} xs={1} style={{ flexGrow: '0' }}>
+        <Row lg={4} md={3} sm={2} xs={1} >
           {cardInfo.map(renderCard)}
         </Row>
       </div>

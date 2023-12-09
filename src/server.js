@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -95,23 +96,30 @@ app.delete('/Delsociety', async (req, res) => {
   }
 });
 
-app.post('/updatesociety', async (req, res) => {
-  const { title, text,alreadysociety, imageBase64 } = req.body;
+app.patch('/updatesociety', async (req, res) => {
+  const { title, text, alreadysociety, imageBase64 } = req.body;
+
+  console.log('Received PATCH request:', { title, text, alreadysociety, imageBase64 });
 
   try {
     // Check if the society with the given name already exists
-    const existingSociety = await pool.query('SELECT * FROM society WHERE title = $1', [title]);
+    const existingSociety = await pool.query('SELECT * FROM society WHERE title = $1', [alreadysociety]);
+
+    console.log('Existing Society:', existingSociety.rows);
 
     if (existingSociety.rows.length > 0) {
       // Update the existing society
-      await pool.query('UPDATE society SET title=$1, text = $1, image = $2 WHERE title = $3', [
+      await pool.query('UPDATE society SET title=$1, text=$2, image=$3 WHERE title=$4', [
         title,
         text,
         imageBase64,
         alreadysociety,
       ]);
+
+      console.log('Update successful.');
       res.json({ success: true });
     } else {
+      console.log('Society not found.');
       res.json({ success: false, message: 'Society not found.' });
     }
   } catch (error) {
@@ -119,6 +127,7 @@ app.post('/updatesociety', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 app.listen(port, () => {
