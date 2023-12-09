@@ -7,10 +7,10 @@ import './style.css';
 
 function Example(props) {
   const [show, setShow] = useState(false);
-  const [societyName, setSocietyName] = useState('');
-  const [mentorName, setMentorName] = useState('');
+  const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
+  const [mentorName, setMentorName] = useState(props.defaultMentorName || '');
   const [image, setImage] = useState(null);
-
+  const alreadysociety=societyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
@@ -41,12 +41,12 @@ function Example(props) {
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
-      const response = await fetch('http://localhost:3001/society', {
+      const response = await fetch('http://localhost:3001/updatesociety', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, text, imageBase64 }),
+        body: JSON.stringify({ title, text,alreadysociety, imageBase64 }),
       });
 
       const data = await response.json();

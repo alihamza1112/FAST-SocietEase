@@ -35,18 +35,22 @@ export default function Main() {
 
   const deleteCard = async (title) => {
     try {
-      const response = await fetch(`http://localhost:3001/Delsociety?title=${encodeURIComponent(title)}`, {
+      const response = await fetch('http://localhost:3001/Delsociety', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ title }),
       });
 
       const data = await response.json();
 
       if (data.success) {
         // Handle successful deletion (e.g., update state or UI)
-        setCardInfo((prevCards) => prevCards.filter((card) => card.title !== title));
+        alert('Delete Society Successfully');
+
+        // Reload the page after successful deletion
+        window.location.reload();
       } else {
         alert('Failed to delete society.');
       }
@@ -70,10 +74,13 @@ export default function Main() {
           <Card.Body>
             <Card.Title>{card.title}</Card.Title>
             <Card.Text>{card.text}</Card.Text>
-            <Button variant="danger" className='CardBtn' onClick={() => deleteCard(card.title)}>
+            <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.title)}>
               Delete
             </Button>
-            <UpdateModal/>
+            <UpdateModal
+          defaultSocietyName={card.title}
+          defaultMentorName={card.text}
+        />
           </Card.Body>
         </Card>
       </Col>
@@ -84,7 +91,7 @@ export default function Main() {
     <body className="mainBody">
       <div className="App">
         <Nav />
-        <Row lg={4} md={3} sm={2} xs={1}>
+        <Row lg={4} md={3} sm={2} xs={1} style={{ flexGrow: '0' }}>
           {cardInfo.map(renderCard)}
         </Row>
       </div>

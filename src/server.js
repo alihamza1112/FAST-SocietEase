@@ -11,7 +11,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'fyp',
-  password: 'Password',
+  password: '132477',
   port: 5432,
 });
 
@@ -95,6 +95,30 @@ app.delete('/Delsociety', async (req, res) => {
   }
 });
 
+app.post('/updatesociety', async (req, res) => {
+  const { title, text,alreadysociety, imageBase64 } = req.body;
+
+  try {
+    // Check if the society with the given name already exists
+    const existingSociety = await pool.query('SELECT * FROM society WHERE title = $1', [title]);
+
+    if (existingSociety.rows.length > 0) {
+      // Update the existing society
+      await pool.query('UPDATE society SET title=$1, text = $1, image = $2 WHERE title = $3', [
+        title,
+        text,
+        imageBase64,
+        alreadysociety,
+      ]);
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Society not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating data in the database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 app.listen(port, () => {
