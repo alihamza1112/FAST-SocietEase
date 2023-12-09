@@ -10,7 +10,9 @@ function Example(props) {
   const [societyName, setSocietyName] = useState('');
   const [mentorName, setMentorName] = useState('');
   const [image, setImage] = useState(null);
-
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ function Example(props) {
             Close
           </Button>
 
-          <Button variant="primary" onClick={(e) => { handleClose(); handleSubmit(e); }}>
+          <Button variant="primary" onClick={  (e) => { handleRefresh();handleClose(); handleSubmit(e); }}>
             Save Changes
           </Button>
         </Modal.Footer>

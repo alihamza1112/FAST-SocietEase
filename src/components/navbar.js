@@ -3,9 +3,16 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from './modal';
-
+import { useNavigate } from 'react-router-dom';
 function NavScrollExample(props)  {
     const { buttonOnClick } = props;
+    const navigate = useNavigate();
+    const movepagefunction1 = ()=>{
+      navigate('/MainPage')
+    };
+    const movepagefunction2 = ()=>{
+      navigate('/eventpage')
+    };
     const handleRefresh = () => {
       window.location.reload();
     };
@@ -22,8 +29,8 @@ function NavScrollExample(props)  {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Link</Nav.Link>
+            <Nav.Link onClick={movepagefunction1}>Home</Nav.Link>
+            <Nav.Link  onClick={movepagefunction2}>Events</Nav.Link>
             <NavDropdown title="Link" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">

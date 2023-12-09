@@ -16,22 +16,39 @@ export default function Main() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/getsociety')
-      .then((response) => response.json())
-      .then((data) => {
-        setCardInfo(
-          data.data.map((card) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/getsociety');
+        const data = await response.json();
+  
+        // Load images asynchronously
+        const cardData = await Promise.all(
+          data.data.map(async (card) => {
             const imageData = card.image;
             const image = new Image();
-            image.onload = () => {
-              card.image = image;
-            };
-            image.src = `data:image/png;base64,${imageData}`;
+  
+            // Wrap image loading in a promise
+            await new Promise((resolve) => {
+              image.onload = () => {
+                card.image = image;
+                resolve();
+              };
+              image.src =  `data:image/png;base64,${imageData}`;
+            });
+  
             return card;
           })
         );
-      });
-  }, []); // Fetch data on initial render
+  
+        // Update state after all images are loaded
+        setCardInfo(cardData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData(); // Call the fetchData function
+  }, []); // Fetch data on initial render
 
   const deleteCard = async (title) => {
     try {
