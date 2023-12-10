@@ -81,7 +81,7 @@ export default function Event() {
         <Col key={index} className="p-4 mb-4">
           <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
             <Link
-              to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(
+              to={`/EventData?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(
                 card.text
               )}&image=${encodeURIComponent(card.image.src)}`}
               style={linkStyle}
@@ -105,7 +105,9 @@ export default function Event() {
     };
   
     return (
+      
       <body className="mainBody">
+       
         <div className="App">
           <Nav showModal={2}/>
           <h1 className='eventh1'>Events</h1>
