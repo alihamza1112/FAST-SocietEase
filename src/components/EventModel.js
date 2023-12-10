@@ -2,26 +2,26 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom';
 import './style.css';
+import { useNavigate } from 'react-router-dom';
 
-function Example(props) {
+function EventModel(props) {
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [societyName, setSocietyName] = useState('');
-  const [description, setDescription] = useState('');
+  const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
+  const [mentorName, setMentorName] = useState(props.defaultMentorName || '');
   const [image, setImage] = useState(null);
-  
+  const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const navigate = useNavigate();
-
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);
   };
-  const handleRefresh = () => {
-    window.location.reload();
-  };
+
   const encodeImageToBase64 = (image) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -40,22 +40,23 @@ function Example(props) {
     e.preventDefault();
 
     const title = societyName;
+    const text = mentorName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
-      const response = await fetch('http://localhost:3001/society', {
-        method: 'POST',
+      const response = await fetch('http://localhost:3001/updatesociety', {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, imageBase64, description }),
+        body: JSON.stringify({ title, text,alreadysociety, imageBase64 }),
       });
 
       const data = await response.json();
 
       if (data.success) {
         // Refresh the page to fetch the updated data
-        // window.location.reload();
+        //window.location.reload();
       } else {
         alert('Failed to add society.');
       }
@@ -63,25 +64,24 @@ function Example(props) {
       console.error('Error:', error);
     }
   };
-
-  const LogOut = () => {
+  const  LogOut=()=>{
+   
     navigate('/loginPage');
   };
-
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        +
+        Add Event
       </Button>
       <Button className='Logoutbtn' variant="link" onClick={LogOut}>Logout</Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add a Society</Modal.Title>
+          <Modal.Title>Add an Event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="societyNameInput">
-              <Form.Label>Society Name</Form.Label>
+              <Form.Label>Event Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Here"
@@ -91,21 +91,20 @@ function Example(props) {
               />
             </Form.Group>
 
-            <Form.Group controlId="descriptionInput">
-              <Form.Label>Description</Form.Label>
+            <Form.Group controlId="mentorNameInput">
+              <Form.Label>Event Description</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Enter Description Here"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                type="text"
+                placeholder="Enter Here"
+                value={mentorName}
+                onChange={(e) => setMentorName(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group controlId="imageInput">
-              <Form.Label>Select Society Logo</Form.Label>
+              <Form.Label>Select Event Logo</Form.Label>
               <Form.Group>
-                <input type="file" onChange={handleImageChange} accept="image/*" />
+              <input type="file" onChange={handleImageChange} accept="image/*" />
               </Form.Group>
             </Form.Group>
           </Form>
@@ -114,6 +113,7 @@ function Example(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
+
           <Button variant="primary" onClick={(e) => { handleRefresh();handleClose(); handleSubmit(e); }}>
             Save Changes
           </Button>
@@ -123,4 +123,4 @@ function Example(props) {
   );
 }
 
-export default Example;
+export default EventModel;

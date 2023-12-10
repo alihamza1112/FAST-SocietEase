@@ -12,6 +12,9 @@ function Example(props) {
   const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);
@@ -104,7 +107,7 @@ function Example(props) {
             Close
           </Button>
 
-          <Button variant="primary" onClick={(e) => { handleClose(); handleSubmit(e); }}>
+          <Button variant="primary" onClick={(e) => { handleRefresh();handleClose(); handleSubmit(e); }}>
             Save Changes
           </Button>
         </Modal.Footer>

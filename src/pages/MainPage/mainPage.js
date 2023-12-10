@@ -50,7 +50,7 @@ function MainPage() {
       </Carousel.Item>
     </Carousel>
     {' '}
-    <div  id='yo' ><Button variant="outline-success" onClick={movepagefunction}>Admin Panal</Button>
+    <div  id='yo' ><Button variant="outline-success" onClick={movepagefunction}>Welcome to FAST SocietEase</Button>
     </div>
 <br></br>
 
