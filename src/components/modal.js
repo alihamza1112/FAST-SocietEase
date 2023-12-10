@@ -8,12 +8,13 @@ import './style.css';
 function Example(props) {
   const [show, setShow] = useState(false);
   const [societyName, setSocietyName] = useState('');
-  const [mentorName, setMentorName] = useState('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
+
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);
@@ -37,7 +38,6 @@ function Example(props) {
     e.preventDefault();
 
     const title = societyName;
-    const text = mentorName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
@@ -46,14 +46,14 @@ function Example(props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, text, imageBase64 }),
+        body: JSON.stringify({ title, imageBase64, description }),
       });
 
       const data = await response.json();
 
       if (data.success) {
         // Refresh the page to fetch the updated data
-        //window.location.reload();
+        // window.location.reload();
       } else {
         alert('Failed to add society.');
       }
@@ -61,10 +61,11 @@ function Example(props) {
       console.error('Error:', error);
     }
   };
- const  LogOut=()=>{
-   
+
+  const LogOut = () => {
     navigate('/loginPage');
   };
+
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -88,20 +89,21 @@ function Example(props) {
               />
             </Form.Group>
 
-            <Form.Group controlId="mentorNameInput">
-              <Form.Label>Mentor Name</Form.Label>
+            <Form.Group controlId="descriptionInput">
+              <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Enter Here"
-                value={mentorName}
-                onChange={(e) => setMentorName(e.target.value)}
+                as="textarea"
+                rows={3}
+                placeholder="Enter Description Here"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group controlId="imageInput">
               <Form.Label>Select Society Logo</Form.Label>
               <Form.Group>
-              <input type="file" onChange={handleImageChange} accept="image/*" />
+                <input type="file" onChange={handleImageChange} accept="image/*" />
               </Form.Group>
             </Form.Group>
           </Form>
@@ -110,7 +112,6 @@ function Example(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-
           <Button variant="primary" onClick={(e) => { handleClose(); handleSubmit(e); }}>
             Save Changes
           </Button>

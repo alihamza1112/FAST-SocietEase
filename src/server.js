@@ -52,11 +52,11 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/society', async (req, res) => {
-  const { title,text,imageBase64 } = req.body;
+  const { title,imageBase64,description } = req.body;
 
   try {
-    await pool.query('INSERT INTO society(title, text,image) VALUES($1, $2, $3)', [
-      title,text,imageBase64,
+    await pool.query('INSERT INTO society(society_name, society_logo,society_description) VALUES($1, $2, $3)', [
+      title,imageBase64,description
     ]);
     res.json({ success: true });
   } catch (error) {
@@ -66,7 +66,7 @@ app.post('/society', async (req, res) => {
 });
 app.get('/getsociety', async (req, res) => {
   try {
-    const result = await pool.query('SELECT title, text, image FROM society');
+    const result = await pool.query('SELECT society_name, society_logo,society_description FROM society');
     const data = result.rows;
     res.json({ data });
   } catch (error) {
@@ -75,13 +75,32 @@ app.get('/getsociety', async (req, res) => {
   }
 });
 
+app.get('/getsocietybysearch', async (req, res) => {
+  const { selectedSociety } = req.query;
+
+  try {
+    const result = await pool.query('SELECT society_name, society_logo,society_description FROM society WHERE society_name = $1', [selectedSociety]);
+    
+    if (result.rows.length > 0) {
+      const data = result.rows;
+      res.json({ data });
+    } else {
+      res.status(404).json({ error: 'Society not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 app.delete('/Delsociety', async (req, res) => {
   const { title } = req.body;
 
   try {
-    // Use parameterized query to prevent SQL injection
     const result = await pool.query(
-      'DELETE FROM society WHERE title = $1',
+      'DELETE FROM society WHERE society_name = $1',
       [title]
     );
 
@@ -97,22 +116,20 @@ app.delete('/Delsociety', async (req, res) => {
 });
 
 app.patch('/updatesociety', async (req, res) => {
-  const { title, text, alreadysociety, imageBase64 } = req.body;
+  const { title, description, alreadysociety, imageBase64 } = req.body;
 
-  console.log('Received PATCH request:', { title, text, alreadysociety, imageBase64 });
 
   try {
-    // Check if the society with the given name already exists
-    const existingSociety = await pool.query('SELECT * FROM society WHERE title = $1', [alreadysociety]);
+    
+    const existingSociety = await pool.query('SELECT * FROM society WHERE society_name = $1', [alreadysociety]);
 
-    console.log('Existing Society:', existingSociety.rows);
 
     if (existingSociety.rows.length > 0) {
       // Update the existing society
-      await pool.query('UPDATE society SET title=$1, text=$2, image=$3 WHERE title=$4', [
+      await pool.query('UPDATE society SET society_name=$1, society_logo=$2, society_description=$3 WHERE society_name=$4', [
         title,
-        text,
         imageBase64,
+        description,
         alreadysociety,
       ]);
 
@@ -128,6 +145,68 @@ app.patch('/updatesociety', async (req, res) => {
   }
 });
 
+// ... (unchanged code)
+
+app.post('/addmentor', async (req, res) => {
+  const { societyName, mentorName, mentorEmail, mentorImage } = req.body;
+
+  try {
+    const result = await pool.query('INSERT INTO mentor(society_id, mentor_name, mentor_gmail, mentor_picture) VALUES((SELECT society_id FROM society WHERE society_name = $1), $2, $3, $4)', [
+      societyName,
+      mentorName,
+      mentorEmail,
+      mentorImage,
+    ]);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error inserting mentor data into database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/getmentorbysociety', async (req, res) => {
+  const { selectedSociety } = req.query;
+
+  try {
+    const result = await pool.query('SELECT * FROM mentor WHERE society_id = (SELECT society_id FROM society WHERE society_name = $1)', [selectedSociety]);
+
+    if (result.rows.length > 0) {
+      const data = result.rows;
+      res.json({ data });
+    } else {
+      res.status(404).json({ error: 'Mentor not found for the society' });
+    }
+  } catch (error) {
+    console.error('Error fetching mentor data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.patch('/updatementor/:mentorId', async (req, res) => {
+  const { mentorId } = req.params;
+  const { mentorName, mentorEmail, mentorImage } = req.body;
+
+  try {
+    const result = await pool.query('UPDATE mentor SET mentor_name=$1, mentor_gmail=$2, mentor_picture=$3 WHERE mentor_id = $4', [
+      mentorName,
+      mentorEmail,
+      mentorImage,
+      mentorId,
+    ]);
+
+    if (result.rowCount > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Mentor not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating mentor data in the database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ... (unchanged code)
 
 
 app.listen(port, () => {

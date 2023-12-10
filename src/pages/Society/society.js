@@ -16,22 +16,40 @@ export default function Main() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/getsociety')
-      .then((response) => response.json())
-      .then((data) => {
-        setCardInfo(
-          data.data.map((card) => {
-            const imageData = card.image;
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/getsociety');
+        const data = await response.json();
+  
+        // Load images asynchronously
+        const cardData = await Promise.all(
+          data.data.map(async (card) => {
+            const imageData = card.society_logo;
             const image = new Image();
-            image.onload = () => {
-              card.image = image;
-            };
-            image.src = `data:image/png;base64,${imageData}`;
+  
+            // Wrap image loading in a promise
+            await new Promise((resolve) => {
+              image.onload = () => {
+                card.society_logo = image;
+                resolve();
+              };
+              image.src = `data:image/png;base64,${imageData}`;
+            });
+  
             return card;
           })
         );
-      });
+  
+        // Update state after all images are loaded
+        setCardInfo(cardData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData(); // Call the fetchData function
   }, []); // Fetch data on initial render
+  
 
   const deleteCard = async (title) => {
     try {
@@ -64,22 +82,22 @@ export default function Main() {
       <Col key={index} className="p-4 mb-4">
         <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
           <Link
-            to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(
-              card.text
-            )}&image=${encodeURIComponent(card.image.src)}`}
+            to={`/executivebody?society_name=${encodeURIComponent(card.society_name)}&society_description=${encodeURIComponent(
+              card.society_description
+            )}&society_logo=${encodeURIComponent(card.society_logo.src)}`}
             style={linkStyle}
           >
-            <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
+            <Card.Img variant="top" src={card.society_logo.src} style={{ height: '150px' }} />
           </Link>
           <Card.Body>
-            <Card.Title>{card.title}</Card.Title>
-            <Card.Text>{card.text}</Card.Text>
-            <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.title)}>
+            <Card.Title>{card.society_name}</Card.Title>
+            <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.society_name)}>
               Delete
             </Button>
             <UpdateModal
-          defaultSocietyName={card.title}
-          defaultMentorName={card.text}
+          defaultSocietyName={card.society_name}
+          defaultSocietyDescription={card.society_description}
+          defaultSocietyLogo={card.society_logo.src}
         />
           </Card.Body>
         </Card>
