@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import './Event.css';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Nav from '../../components/navbar';
@@ -106,7 +107,8 @@ export default function Event() {
     return (
       <body className="mainBody">
         <div className="App">
-          <Nav />
+          <Nav showModal={2}/>
+          <h1 className='eventh1'>Events</h1>
           <Row lg={4} md={3} sm={2} xs={1} >
             {cardInfo.map(renderCard)}
           </Row>

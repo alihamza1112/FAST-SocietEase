@@ -3,9 +3,10 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from './modal';
+import EvenModel from './EventModel'
 import { useNavigate } from 'react-router-dom';
 function NavScrollExample(props)  {
-    const { buttonOnClick } = props;
+  const { buttonOnClick, showModal } = props;
     const navigate = useNavigate();
     const movepagefunction1 = ()=>{
       navigate('/MainPage')
@@ -46,8 +47,10 @@ function NavScrollExample(props)  {
             </Nav.Link>
           </Nav>
           {props.button && <button onClick={buttonOnClick}>{props.button}</button>}
-
-          <Modal/>
+          
+          {/* Conditionally render Modal based on showModal prop */}
+          {showModal === 1 && <Modal />}
+          {showModal === 2 &&  <EvenModel />}
         </Navbar.Collapse>
       </Container>
     </Navbar>
