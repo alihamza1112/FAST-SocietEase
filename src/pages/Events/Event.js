@@ -6,7 +6,6 @@ import Row from 'react-bootstrap/Row';
 import Nav from '../../components/navbar';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import UpdateModal from '../../components/UpdateModel';
 
 export default function Event() {
     const [cardInfo, setCardInfo] = useState([]);
@@ -18,19 +17,19 @@ export default function Event() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch('http://localhost:3001/getsociety');
+          const response = await fetch('http://localhost:3001/getevent');
           const data = await response.json();
     
           // Load images asynchronously
           const cardData = await Promise.all(
             data.data.map(async (card) => {
-              const imageData = card.image;
+              const imageData = card.event_logo;
               const image = new Image();
     
               // Wrap image loading in a promise
               await new Promise((resolve) => {
                 image.onload = () => {
-                  card.image = image;
+                  card.event_logo = image;
                   resolve();
                 };
                 image.src =  `data:image/png;base64,${imageData}`;
@@ -50,26 +49,26 @@ export default function Event() {
       fetchData(); // Call the fetchData function
     }, []); // Fetch data on initial render
   
-    const deleteCard = async (title) => {
+    const deleteCard = async (event_name) => {
       try {
-        const response = await fetch('http://localhost:3001/Delsociety', {
+        const response = await fetch('http://localhost:3001/Delevent', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ title }),
+          body: JSON.stringify({ event_name }),
         });
   
         const data = await response.json();
   
         if (data.success) {
           // Handle successful deletion (e.g., update state or UI)
-          alert('Delete Society Successfully');
+          alert('Delete event Successfully');
   
           // Reload the page after successful deletion
           window.location.reload();
         } else {
-          alert('Failed to delete society.');
+          alert('Failed to delete event.');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -81,23 +80,18 @@ export default function Event() {
         <Col key={index} className="p-4 mb-4">
           <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
             <Link
-              to={`/EventData?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(
-                card.text
-              )}&image=${encodeURIComponent(card.image.src)}`}
+              to={`/EventData?event_name=${encodeURIComponent(card.event_name)}&event_description=${encodeURIComponent(
+                card.event_description
+              )}`}
               style={linkStyle}
             >
-              <Card.Img variant="top" src={card.image.src} style={{ height: '150px' }} />
+              <Card.Img variant="top" src={card.event_logo.src} style={{ height: '150px' }} />
             </Link>
             <Card.Body>
-              <Card.Title>{card.title}</Card.Title>
-              <Card.Text>{card.text}</Card.Text>
-              <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.title)}>
+              <Card.Title>{card.event_name}</Card.Title>
+              <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.event_name)}>
                 Delete
               </Button>
-              <UpdateModal
-            defaultSocietyName={card.title}
-            defaultMentorName={card.text}
-          />
             </Card.Body>
           </Card>
         </Col>

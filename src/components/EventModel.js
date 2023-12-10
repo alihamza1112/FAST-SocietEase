@@ -7,11 +7,10 @@ import { useNavigate } from 'react-router-dom';
 
 function EventModel(props) {
   const navigate = useNavigate();
+  const [societyName, setSocietyName] = useState('');
+  const [description, setDescription] = useState('');
   const [show, setShow] = useState(false);
-  const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
-  const [mentorName, setMentorName] = useState(props.defaultMentorName || '');
   const [image, setImage] = useState(null);
-  const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleRefresh = () => {
@@ -40,16 +39,15 @@ function EventModel(props) {
     e.preventDefault();
 
     const title = societyName;
-    const text = mentorName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
-      const response = await fetch('http://localhost:3001/updatesociety', {
-        method: 'PATCH',
+      const response = await fetch('http://localhost:3001/addevent', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, text,alreadysociety, imageBase64 }),
+        body: JSON.stringify({ title, imageBase64,description }),
       });
 
       const data = await response.json();
@@ -58,7 +56,7 @@ function EventModel(props) {
         // Refresh the page to fetch the updated data
         //window.location.reload();
       } else {
-        alert('Failed to add society.');
+        alert('Failed to add event.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -91,13 +89,14 @@ function EventModel(props) {
               />
             </Form.Group>
 
-            <Form.Group controlId="mentorNameInput">
-              <Form.Label>Event Description</Form.Label>
+            <Form.Group controlId="descriptionInput">
+              <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Enter Here"
-                value={mentorName}
-                onChange={(e) => setMentorName(e.target.value)}
+                as="textarea"
+                rows={3}
+                placeholder="Enter Description Here"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
 
