@@ -16,7 +16,7 @@ function MainPage() {
       <Carousel.Item className='CI'>
         <img
           className="d-block w-100"
-          src="https://lh3.googleusercontent.com/pw/ADCreHd_yXyDdPwysnopIJ09YRCgt_meIdvF_vMfqLAfKM8CLolvZEV2r659NpCPEfzMdZFVethQKymp9NKr_XoHx4NgO1sVS1wS9UVRGAX5DSe9NlVrJo0ycvRLBjkdyNDnPTZrEm4_ZfrCUP5fQpxWgMc=w1186-h667-s-no-gm"
+          src="https://lh3.googleusercontent.com/pw/ADCreHciSlVU1Lbwu0PuRi4GTIaZLyOE3QRC5ghNqmfJv_kw0jr2nWnpSekoTWKCsj_2i9eIfmOkP6fbXePRzECItsuDAbPQLltSJ3fCAxDw-5E3hrvsnV_ia_rw16KHekv7JQ6N2oNxzBVVcVkbio2dKRc=w1186-h667-s-no-gm"
           alt="First slide"
         />
         <Carousel.Caption>

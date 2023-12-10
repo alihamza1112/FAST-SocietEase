@@ -79,7 +79,7 @@ export default function Main() {
   const renderCard = (card, index) => {
     return (
       <Col key={index} className="p-4 mb-4">
-        <Card className="mx-auto mb-3 p-3" style={{ width: '14rem' }}>
+        <Card className="mx-auto mb-3 p-3" id='CardSty' style={{ width: '14rem' }}>
           <Link
             to={`/executivebody?title=${encodeURIComponent(card.title)}&text=${encodeURIComponent(
               card.text

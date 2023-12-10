@@ -4,7 +4,7 @@
     margin: 0;
     font-size: medium;
     font-family: emoji;
-    background-color: rgb(227, 223, 175);
+    background-color: white;
     background-size: cover;
     background-position: center; /* Optional: Center the background image */
     width: 100%;
@@ -23,4 +23,15 @@
 .eventh1
 {
   margin-top: 20px;
+}
+#CardSty {
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Add transform to the transition */
+  border: 1px solid rgb(255, 0, 0);
+
+}
+
+#CardSty:hover {
+  box-shadow: -1px 10px 30px 10px #01a8a0;
+  transform: scale(1.1); /* Increase the size by 10% (adjust as needed) */
+
 }

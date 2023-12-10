@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
-import './style.css';
 
 function Example(props) {
   const [show, setShow] = useState(false);
@@ -72,7 +71,9 @@ function Example(props) {
       <Button variant="primary" onClick={handleShow}>
         +
       </Button>
-      <Button className='Logoutbtn' variant="link" onClick={LogOut}>Logout</Button>
+      <Button variant="link"
+  onClick={LogOut}
+  style={{ textDecoration: 'none', color: 'red' }} >Logout</Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add a Society</Modal.Title>

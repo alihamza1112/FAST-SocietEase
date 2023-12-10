@@ -19,7 +19,7 @@ function NavScrollExample(props)  {
     };
   return (
     
-    <Navbar  expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" bg="dark" variant="dark">
       <Container fluid>
       
         <Navbar.Brand href="#" onClick={handleRefresh}>FAST SocietEase</Navbar.Brand>

@@ -15,11 +15,12 @@
 
  /* Divs */
  
- .container-xl
+ .inbody
  {
    border: 1px solid #070202; 
    background-color: rgba(0, 0, 0, 0.5);
    height: 100vh;
+   width: 100%;
          margin: auto;
       text-align: center;
 
