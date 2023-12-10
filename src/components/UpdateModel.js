@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 function Example(props) {
   const [show, setShow] = useState(false);
   const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
-  const [mentorName, setMentorName] = useState(props.defaultMentorName || '');
+  const [description, setDescription] = useState(props.defaultSocietyDescription ||'');
   const [image, setImage] = useState(null);
   const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
@@ -36,7 +36,6 @@ function Example(props) {
     e.preventDefault();
 
     const title = societyName;
-    const text = mentorName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
@@ -45,7 +44,7 @@ function Example(props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, text,alreadysociety, imageBase64 }),
+        body: JSON.stringify({ title,description ,alreadysociety, imageBase64 }),
       });
 
       const data = await response.json();
@@ -82,13 +81,14 @@ function Example(props) {
               />
             </Form.Group>
 
-            <Form.Group controlId="mentorNameInput">
-              <Form.Label>Updated Mentor Name</Form.Label>
+            <Form.Group controlId="descriptionInput">
+              <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Enter Here"
-                value={mentorName}
-                onChange={(e) => setMentorName(e.target.value)}
+                as="textarea"
+                rows={3}
+                placeholder="Enter Description Here"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
 
