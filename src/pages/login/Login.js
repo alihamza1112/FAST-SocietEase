@@ -38,7 +38,7 @@ export default function Header(props) {
   return (
     <>
     <body className='loginBody'>
-      <div className="container-xl">
+      <div className="inbody">
         <div className="row align-items-start">
           <div className="col">
             <h2 style={{ color: 'white' }}>Admin Login</h2><br/>

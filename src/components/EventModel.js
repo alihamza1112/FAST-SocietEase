@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import './style.css';
 import { useNavigate } from 'react-router-dom';
 
 function EventModel(props) {
@@ -71,8 +70,10 @@ function EventModel(props) {
       <Button variant="primary" onClick={handleShow}>
         Add Event
       </Button>
-      <Button className='Logoutbtn' variant="link" onClick={LogOut}>Logout</Button>
-      <Modal show={show} onHide={handleClose}>
+      <Button variant="link"
+  onClick={LogOut}
+  style={{ textDecoration: 'none', color: 'red' }} >Logout</Button>
+        <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add an Event</Modal.Title>
         </Modal.Header>

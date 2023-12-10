@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import './style.css';
-
 function Example(props) {
   const [show, setShow] = useState(false);
   const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
