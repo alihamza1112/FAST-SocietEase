@@ -12,7 +12,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'fyp',
-  password: 'Password',
+  password: '132477',
   port: 5432,
 });
 
@@ -132,8 +132,6 @@ app.patch('/updatesociety', async (req, res) => {
         description,
         alreadysociety,
       ]);
-
-      console.log('Update successful.');
       res.json({ success: true });
     } else {
       console.log('Society not found.');
@@ -206,8 +204,74 @@ app.patch('/updatementor/:mentorId', async (req, res) => {
   }
 });
 
-// ... (unchanged code)
+app.post('/addevent', async (req, res) => {
+  const { title,imageBase64,description } = req.body;
 
+  try {
+    await pool.query('INSERT INTO event(event_name,event_description,event_logo) VALUES($1, $2, $3)', [
+      title,description,imageBase64
+    ]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error inserting data into database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/getevent', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT event_name,event_description, event_logo FROM event');
+    const data = result.rows;
+    res.json({ data });
+  } catch (error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.delete('/Delevent', async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    const result = await pool.query(
+      'DELETE FROM event WHERE event_name = $1',
+      [title]
+    );
+
+    if (result.rowCount > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'event not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.post('/addeventdata', async (req, res) => {
+  const { eventName,eventImage } = req.body;
+
+  try {
+    const result = await pool.query('INSERT INTO infoevent(event_id, event_data) VALUES((SELECT event_id FROM event WHERE event_name = $1), $2)', [
+      eventName,
+      eventImage,
+    ]);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error inserting mentor data into database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/geteventdata', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT event_data FROM infoevent');
+    const data = result.rows;
+    res.json({ data });
+  } catch (error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

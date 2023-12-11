@@ -1,46 +1,172 @@
+import React, { useState, useEffect } from 'react';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Card from 'react-bootstrap/Card';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import './EventData.css';
-import { Container, Row, Col, Image } from 'react-bootstrap';
-import Nav from '../../components/navbar'
+
 function EventData() {
+  const [eventName, setEventName] = useState('');
+  const [eventDescription, setEventDescription] = useState('');
+  const [eventPic, setEventPic] = useState(null);
+  const [cardInfo, setCardInfo] = useState([]);
+  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventName = urlParams.get('event_name');
+    const eventDescription = urlParams.get('event_description');
+    setEventName(eventName);
+    setEventDescription(eventDescription);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/geteventdata');
+        const data = await response.json();
+
+        const cardData = await Promise.all(
+          data.data.map(async (card) => {
+            const imageData = card.event_data;
+            const image = new Image();
+
+            await new Promise((resolve) => {
+              image.onload = () => {
+                card.event_data = image;
+                resolve();
+              };
+              image.src = `data:image/png;base64,${imageData}`;
+            });
+
+            return card;
+          })
+        );
+
+        setCardInfo(cardData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setEventPic(file);
+  };
+
+  const encodeImageToBase64 = (image) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Image = reader.result.split(',')[1];
+        resolve(base64Image);
+      };
+      reader.onerror = () => {
+        reject('Error encoding image to base64');
+      };
+      reader.readAsDataURL(image);
+    });
+  };
+
+  const handleUpload = async () => {
+    try {
+      const imageBase64 = await encodeImageToBase64(eventPic);
+      const response = await fetch('http://localhost:3001/addeventdata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventName: eventName,
+          eventDescription: eventDescription,
+          eventImage: imageBase64,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        window.location.reload();
+        console.log('Event data added successfully.');
+      } else {
+        console.log('Error adding event data.');
+      }
+    } catch (error) {
+      console.error('Error adding event data:', error);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleModalShow = (index) => {
+    setExpandedIndex(index);
+    setShowModal(true);
+  };
+
+  const renderCard = (card, index) => {
+   
   
+    return (
+      <Col key={index} className="p-4 mb-4">
+        <Card className="mx-auto mb-3 p-3" id='CardSty' style={{ width: '14rem' }} onClick={() => handleModalShow(index)}>
+            <Card.Img variant="top" src={card.event_data.src} style={{ height: '150px' }} />
+        </Card>
+      </Col>
+    );
+  };
+  
+
   return (
-    <body>
-      <Nav/>
-    
-    {' '}
-    
-<br></br>
-
-    <Container>
-      {/* Top of the page with responsive image */}
-      
-
-      {/* Text about the society */}
+    <div className="eventData">
+      <h1>Event Information</h1>
       <Row className="mb-4">
-        <Col>
-          <p style={{ color: 'black' }}>The Software Engineering Society is an initiative aimed at bridging the gap between industry and academia in the field of software engineering. The society was created with the goal of creating a platform for collaboration and communication between industry professionals and academics, to foster innovation and advance the field of software engineering. Software engineering is a rapidly evolving field, with new technologies and best practices emerging at an unprecedented pace. However, there is often a gap between the knowledge and skills that are taught in academia and the practical skills and knowledge required in the industry</p>
+        <Col className="text-left">
+          <div className="event-name" style={{ marginLeft: '10px' }}>
+            <h3>{eventName}</h3>
+          </div>
+        </Col>
+        <Col className="text-right">
+          <div className="event-options">
+            <form onSubmit={(e) => handleUpload(e)}>
+              <input type="file" accept="image/*" onChange={handleImageChange} />
+              <button type="submit">Upload</button>
+            </form>
+          </div>
         </Col>
       </Row>
-
-      {/* Circle image with name, email, category */}
-      
-
-      {/* Two columns, eight rows with circle image and text */}
-      <Row>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-          <Col key={index} xs={6} sm={3} className="mb-4 d-flex flex-column align-items-center">
-<Image src={`https://www.imagelighteditor.com/img/bg-after.jpg`} fluid style={{ height: '300px', width: '500px', objectFit: 'cover' }} />
-            <div className="mt-2 text-center">
-              <p>Name: Mustajab {index}</p>
-              <p>Email: mustajab{index}@example.com</p>
-              <p>Category: Category {index}</p>
-            </div>
-          </Col>
-        ))}
+      <hr />
+      <div className="event-description">
+        <p style={{ textAlign: 'center' }}>{eventDescription}</p>
+      </div>
+      <Row lg={4} md={3} sm={2} xs={1}>
+        {cardInfo.map(renderCard)}
       </Row>
-    </Container>
-    </body>
+
+      {/* Modal for enlarged image */}
+      <Modal show={showModal} onHide={handleModalClose} centered>
+        <Modal.Body>
+          {expandedIndex !== null && (
+            <img
+              src={cardInfo[expandedIndex].event_data.src}
+              alt={`Enlarged ${eventName}`}
+              style={{ width: '100%', height: 'auto' }}
+            />
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
 }
 
