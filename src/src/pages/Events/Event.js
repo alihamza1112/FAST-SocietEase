@@ -87,7 +87,7 @@ export default function Event() {
             >
               <Card.Img variant="top" src={card.event_logo.src} style={{ height: '150px' }} />
             </Link>
-            <Card.Body>
+            <Card.Body className="text-center">
               <Card.Title>{card.event_name}</Card.Title>
               <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.event_name)}>
                 Delete

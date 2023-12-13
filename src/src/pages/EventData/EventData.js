@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Nav from '../../components/navbar';
 import './EventData.css';
 
 function EventData() {
@@ -25,14 +26,16 @@ function EventData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/geteventdata');
+        const response = await fetch(`http://localhost:3001/geteventdata?event_name=${encodeURIComponent(eventName)}`);
         const data = await response.json();
-
+  
+        // Load images asynchronously
         const cardData = await Promise.all(
           data.data.map(async (card) => {
             const imageData = card.event_data;
             const image = new Image();
-
+  
+            // Wrap image loading in a promise
             await new Promise((resolve) => {
               image.onload = () => {
                 card.event_data = image;
@@ -40,19 +43,20 @@ function EventData() {
               };
               image.src = `data:image/png;base64,${imageData}`;
             });
-
+  
             return card;
           })
         );
-
+  
+        // Update state after all images are loaded
         setCardInfo(cardData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
-    fetchData();
-  }, []);
+  
+    fetchData(); // Call the fetchData function
+  }, [eventName]); // Fetch data on initial render
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -109,22 +113,55 @@ function EventData() {
     setExpandedIndex(index);
     setShowModal(true);
   };
+  const deleteCard = async (eventData_id) => {
+    try {
+      const response = await fetch('http://localhost:3001/Deleventdata', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventData_id }),
+      });
 
+      const data = await response.json();
+
+      if (data.success) {
+        // Handle successful deletion (e.g., update state or UI)
+        alert('Delete event picture Successfully');
+
+        // Reload the page after successful deletion
+        window.location.reload();
+      } else {
+        alert('Failed to delete event picture.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   const renderCard = (card, index) => {
-   
-  
     return (
       <Col key={index} className="p-4 mb-4">
-        <Card className="mx-auto mb-3 p-3" id='CardSty' style={{ width: '14rem' }} onClick={() => handleModalShow(index)}>
+        <Card className="mx-auto mb-3 p-3" id="CardSty" style={{ width: '14rem' }}>
+          <div onClick={() => handleModalShow(index)}>
             <Card.Img variant="top" src={card.event_data.src} style={{ height: '150px' }} />
+          </div>
+          <Card.Body className="text-center">
+            <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.infoevent_id)}>
+              Delete
+            </Button>
+          </Card.Body>
         </Card>
       </Col>
     );
   };
   
+  
 
   return (
+    <>
+     <Nav/> 
     <div className="eventData">
+      <br/>
       <h1>Event Information</h1>
       <Row className="mb-4">
         <Col className="text-left">
@@ -167,6 +204,7 @@ function EventData() {
         </Modal.Footer>
       </Modal>
     </div>
+    </>
   );
 }
 

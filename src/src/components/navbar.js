@@ -3,12 +3,13 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Modal from './modal';
 import EvenModel from './EventModel'
+import AddMentor from './addmentormoadal'
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { NavLink } from 'react-router-dom';
 
 function NavScrollExample(props)  {
-  const { buttonOnClick, showModal } = props;
+  const { buttonOnClick, showModal,title } = props;
     const navigate = useNavigate();
    
     const handleRefresh = () => {
@@ -46,6 +47,7 @@ function NavScrollExample(props)  {
           {/* Conditionally render Modal based on showModal prop */}
           {showModal === 1 && <Modal />}
           {showModal === 2 &&  <EvenModel />}
+          {showModal === 3 &&  <AddMentor defaultSocietyName={title} />}
           <Button variant="link"
   onClick={LogOut}
   style={{ textDecoration: 'none', color: 'red' }} >Logout</Button>

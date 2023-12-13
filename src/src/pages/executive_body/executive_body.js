@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import Nav from '../../components/navbar';
 import { useLocation } from 'react-router-dom';
-import { Container, Row, Col, Image, Dropdown, FormControl, InputGroup, Button } from 'react-bootstrap';
+import UpdateMentor from '../../components/updatementormodal'
+import { Container, Row, Col, Image, Dropdown, FormControl, InputGroup} from 'react-bootstrap';
 
 const ExecutiveBody = () => {
   const location = useLocation();
@@ -12,8 +14,6 @@ const ExecutiveBody = () => {
   const [executiveImage, setExecutiveImage] = useState('');
   const [mentorName, setMentorName] = useState('');
   const [mentorEmail, setMentorEmail] = useState('');
-  const [editingName, setEditingName] = useState(false);
-  const [editingEmail, setEditingEmail] = useState(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -25,8 +25,8 @@ const ExecutiveBody = () => {
       setTitle(decodeURIComponent(titleParam));
       setText(decodeURIComponent(textParam));
       setSocietyLogo(decodeURIComponent(imageParam));
+      
     }
-
     // Fetch the list of societies from the server
     const fetchSocieties = async () => {
       try {
@@ -37,10 +37,11 @@ const ExecutiveBody = () => {
         console.error('Error fetching societies:', error);
       }
     };
-
+    if (titleParam) {
+      handleSocietyChange(decodeURIComponent(titleParam));
+    }
     fetchSocieties();
   }, [location.search]);
-
   const handleSocietyChange = async (selectedSociety) => {
     try {
       const societyResponse = await fetch(`http://localhost:3001/getsocietybysearch?selectedSociety=${encodeURIComponent(selectedSociety)}`, {
@@ -63,7 +64,6 @@ const ExecutiveBody = () => {
       } else {
         console.log('Society not found');
       }
-
       // Fetch mentor data
       const mentorResponse = await fetch(`http://localhost:3001/getmentorbysociety?selectedSociety=${encodeURIComponent(selectedSociety)}`, {
         method: 'GET',
@@ -96,92 +96,14 @@ const ExecutiveBody = () => {
     return societies.filter((society) => society.toLowerCase().startsWith(input.toLowerCase()));
   };
 
-  const handleMentorUpdate = async (selectedSociety) => {
-    if (!selectedSociety) {
-    
-      console.error('Missing selected society');
-      return;
-    }
-    try {
-      // Check if mentor data exists
-      const mentorResponse = await fetch(`http://localhost:3001/getmentorbysociety?selectedSociety=${encodeURIComponent(selectedSociety)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      const mentorData = await mentorResponse.json();
-  
-      if (mentorData.data) {
-        // Mentor data exists, update it
-        const mentor = mentorData.data[0];
-        updateMentorData(mentor.mentor_id);
-      } else {
-        // Mentor data doesn't exist, add it
-        addMentorData(selectedSociety);
-      }
-    } catch (error) {
-      console.error('Error checking mentor data:', error);
-    }
-  };
-  
-  const updateMentorData = async (mentorId) => {
-    try {
-      const response = await fetch(`http://localhost:3001/updatementor/${mentorId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mentorName,
-          mentorEmail,
-          mentorImage: executiveImage.split(',')[1], // Sending only the base64 part
-        }),
-      });
-  
-      const data = await response.json();
-  
-      if (data.success) {
-        console.log('Mentor data updated successfully.');
-      } else {
-        console.log('Error updating mentor data.');
-      }
-    } catch (error) {
-      console.error('Error updating mentor data:', error);
-    }
-  };
-  
-  const addMentorData = async (selectedSociety) => {
-    try {
-      const response = await fetch('http://localhost:3001/addmentor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          societyName: selectedSociety,
-          mentorName,
-          mentorEmail,
-          mentorImage: executiveImage.split(',')[1], // Sending only the base64 part
-        }),
-      });
-  
-      const data = await response.json();
-  
-      if (data.success) {
-        console.log('Mentor data added successfully.');
-      } else {
-        console.log('Error adding mentor data.');
-      }
-    } catch (error) {
-      console.error('Error adding mentor data:', error);
-    }
-  };
   
 
+
   return (
+    <>
+    <Nav showModal={3} title={title}/>
     <Container>
+      
       <br />
       <Row className="mb-4">
         <Col>
@@ -203,6 +125,7 @@ const ExecutiveBody = () => {
               onChange={(e) => setSelectedSociety(e.target.value)}
               onKeyDown={handleKeyDown}
             />
+            
           </InputGroup>
         </Col>
       </Row>
@@ -227,8 +150,6 @@ const ExecutiveBody = () => {
       <Row className="mb-4 d-flex justify-content-center align-items-center">
         <Col xs={12} md={6} lg={4} className="text-center">
           <h2>Executive Body</h2>
-          <div className="d-block mx-auto clickable-image">
-            <label htmlFor="fileInput">
               <Image
                 src={executiveImage}
                 roundedCircle
@@ -236,35 +157,23 @@ const ExecutiveBody = () => {
                 style={{ height: '200px', width: '200px', cursor: 'pointer' }}
                 alt="Executive Body"
               />
-            </label>
-            <input
-              id="fileInput"
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const selectedFile = e.target.files[0];
-                if (selectedFile) {
-                  const reader = new FileReader();
-                  reader.onload = () => {
-                    setExecutiveImage(reader.result);
-                  };
-                  reader.readAsDataURL(selectedFile);
-                }
-              }}
+
+          <div className="text-center mt-2">
+            <p>
+              <strong>Name:</strong> {mentorName}
+            </p>
+            <p>
+              <strong>Email:</strong> {mentorEmail}
+            </p>
+            <p>
+              <strong>Mentor</strong>
+            </p>
+            <UpdateMentor defaultSocietyName={title}
+            defaultMentorName={mentorName}
+            defaultMentorEmail={mentorEmail}
             />
           </div>
 
-          <div className="text-center mt-2">
-            <p onDoubleClick={() => setEditingName(true)}>
-              Name: {editingName ? <input type="text" value={mentorName} onChange={(e) => setMentorName(e.target.value)} onBlur={() => setEditingName(false)} /> : mentorName}
-            </p>
-            <p onDoubleClick={() => setEditingEmail(true)}>
-              Email: {editingEmail ? <input type="text" value={mentorEmail} onChange={(e) => setMentorEmail(e.target.value)} onBlur={() => setEditingEmail(false)} /> : mentorEmail}
-            </p>
-            <p>Mentor</p>
-            <Button onClick={() => handleMentorUpdate(title)}>Save Mentor Info</Button>
-          </div>
         </Col>
       </Row>
        {/* Two columns, eight rows with circle image and text */}
@@ -273,14 +182,15 @@ const ExecutiveBody = () => {
           <Col key={index} xs={6} sm={3} className="mb-4 d-flex flex-column align-items-center">
             <Image src={`https://www.imagelighteditor.com/img/bg-after.jpg`} roundedCircle fluid style={{ height: '80px', width: '80px', objectFit: 'cover' }} />
             <div className="mt-2 text-center">
-              <p>Name: Mustajab {index}</p>
-              <p>Email: mustajab{index}@example.com</p>
+              <p>Name: Ahmad {index}</p>
+              <p>Email: Ahmad{index}@example.com</p>
               <p>Category: Category {index}</p>
             </div>
           </Col>
         ))}
       </Row>
     </Container>
+    </>
   );
 };
 

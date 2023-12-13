@@ -8,7 +8,7 @@ function Example(props) {
   const [societyName, setSocietyName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-  
+  const [validated, setValidated] = useState(false); // State to track form validation
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -33,13 +33,18 @@ function Example(props) {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
 
     const title = societyName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
+      const responseCheck = await fetch(`http://localhost:3001/getsocietybysearch?selectedSociety=${encodeURIComponent(title)}`);
+      const dataCheck = await responseCheck.json();
+      if (dataCheck.exists) {
+        alert('Society with the same name already exists. Please choose a different name.');
+        return; 
+      }
       const response = await fetch('http://localhost:3001/society', {
         method: 'POST',
         headers: {
@@ -60,7 +65,17 @@ function Example(props) {
       console.error('Error:', error);
     }
   };
-
+  const handleSaveChanges = () => {
+    const form = document.getElementById('societyForm');
+    if (form.checkValidity()) {
+      setValidated(false); // Reset validation state
+      handleRefresh();
+      handleClose();
+      handleSubmit();
+    } else {
+      setValidated(true); // Set validation state to display error messages
+    }
+  };
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -71,7 +86,11 @@ function Example(props) {
           <Modal.Title>Add a Society</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+        <Form
+            id="societyForm"
+            noValidate
+            validated={validated}
+          >
             <Form.Group className="mb-3" controlId="societyNameInput">
               <Form.Label>Society Name</Form.Label>
               <Form.Control
@@ -80,6 +99,7 @@ function Example(props) {
                 autoFocus
                 value={societyName}
                 onChange={(e) => setSocietyName(e.target.value)}
+                required
               />
             </Form.Group>
 
@@ -91,13 +111,14 @@ function Example(props) {
                 placeholder="Enter Description Here"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
               />
             </Form.Group>
 
             <Form.Group controlId="imageInput">
               <Form.Label>Select Society Logo</Form.Label>
               <Form.Group>
-                <input type="file" onChange={handleImageChange} accept="image/*" />
+                <input type="file" onChange={handleImageChange} accept="image/*" required />
               </Form.Group>
             </Form.Group>
           </Form>
@@ -106,7 +127,7 @@ function Example(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={(e) => { handleRefresh();handleClose(); handleSubmit(e); }}>
+          <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>

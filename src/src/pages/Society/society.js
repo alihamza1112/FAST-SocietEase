@@ -89,7 +89,7 @@ export default function Main() {
           >
             <Card.Img variant="top" src={card.society_logo.src} style={{ height: '150px' }} />
           </Link>
-          <Card.Body>
+          <Card.Body className="text-center">
             <Card.Title>{card.society_name}</Card.Title>
             <Button variant="danger" className="CardBtn" onClick={() => deleteCard(card.society_name)}>
               Delete

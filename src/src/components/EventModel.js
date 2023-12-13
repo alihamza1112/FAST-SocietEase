@@ -2,14 +2,15 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-function Example(props) {
+
+function EventModel(props) {
+  const [eventName, setEventName] = useState('');
+  const [description, setDescription] = useState('');
   const [show, setShow] = useState(false);
-  const [societyName, setSocietyName] = useState(props.defaultSocietyName || '');
-  const [description, setDescription] = useState(props.defaultSocietyDescription ||'');
   const [image, setImage] = useState(null);
-  const alreadysociety=props.defaultSocietyName;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [validated, setValidated] = useState(false); // State to track form validation
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -32,52 +33,72 @@ function Example(props) {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
 
-    const title = societyName;
+    const title = eventName;
     const imageBase64 = await encodeImageToBase64(image);
 
     try {
-      const response = await fetch('http://localhost:3001/updatesociety', {
-        method: 'PATCH',
+      const responseCheck = await fetch(`http://localhost:3001/geteventbysearch?selectedevent=${encodeURIComponent(eventName)}`);
+      const dataCheck = await responseCheck.json();
+      if (dataCheck.exists) {
+        alert('Event with the same name already exists. Please choose a different name.');
+        return; 
+      }
+      const response = await fetch('http://localhost:3001/addevent', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title,description ,alreadysociety, imageBase64 }),
+        body: JSON.stringify({ title, imageBase64,description }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        // Refresh the page to fetch the updated data
-        //window.location.reload();
       } else {
-        alert('Failed to add society.');
+        alert('Failed to add event.');
       }
     } catch (error) {
       console.error('Error:', error);
     }
   };
+  const handleSaveChanges = () => {
+    const form = document.getElementById('eventForm');
+    if (form.checkValidity()) {
+      setValidated(false); // Reset validation state
+      handleRefresh();
+      handleClose();
+      handleSubmit();
+    } else {
+      setValidated(true); // Set validation state to display error messages
+    }
+  };
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Update
+        Add Event
       </Button>
-      <Modal show={show} onHide={handleClose}>
+
+        <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Update a Society</Modal.Title>
+          <Modal.Title>Add an Event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+        <Form
+            id="eventForm"
+            noValidate
+            validated={validated}
+          >
             <Form.Group className="mb-3" controlId="societyNameInput">
-              <Form.Label>Updated Society Name</Form.Label>
+              <Form.Label>Event Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Here"
                 autoFocus
-                value={societyName}
-                onChange={(e) => setSocietyName(e.target.value)}
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+                required
               />
             </Form.Group>
 
@@ -89,13 +110,14 @@ function Example(props) {
                 placeholder="Enter Description Here"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
               />
             </Form.Group>
 
             <Form.Group controlId="imageInput">
-              <Form.Label>Select Society Logo</Form.Label>
+              <Form.Label>Select Event Logo</Form.Label>
               <Form.Group>
-              <input type="file" onChange={handleImageChange} accept="image/*" />
+              <input type="file" onChange={handleImageChange} accept="image/*" required/>
               </Form.Group>
             </Form.Group>
           </Form>
@@ -105,7 +127,7 @@ function Example(props) {
             Close
           </Button>
 
-          <Button variant="primary" onClick={(e) => { handleRefresh();handleClose(); handleSubmit(e); }}>
+          <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -114,4 +136,4 @@ function Example(props) {
   );
 }
 
-export default Example;
+export default EventModel;
