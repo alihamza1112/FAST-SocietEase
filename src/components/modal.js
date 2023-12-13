@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom';
 
 function Example(props) {
   const [show, setShow] = useState(false);
@@ -12,7 +11,6 @@ function Example(props) {
   
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const navigate = useNavigate();
 
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
@@ -63,18 +61,11 @@ function Example(props) {
     }
   };
 
-  const LogOut = () => {
-    navigate('/loginPage');
-  };
-
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
         +
       </Button>
-      <Button variant="link"
-  onClick={LogOut}
-  style={{ textDecoration: 'none', color: 'red' }} >Logout</Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add a Society</Modal.Title>
